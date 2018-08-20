@@ -20,7 +20,7 @@ app.post('/' + 'upload', upload.single('file'), function(req, res) {
 
 app.listen(process.env.PORT || 5000, function() {
     console.log('Listening...')
-    parseTextToJSON(fs.readFileSync('sample.txt').toString())
+    // parseTextToJSON(fs.readFileSync('sample.txt').toString())
 })
 
 function parseTextToJSON(text) {
@@ -99,10 +99,9 @@ function parseTextToJSON(text) {
         }
     });
 
-    console.log(parsedData)
-
-    fs.writeFileSync('result.txt', Buffer.from(JSON.stringify(parsedData, null, 2)));
-    console.log('FILE UPDATED')
+    // console.log(parsedData)
+    // fs.writeFileSync('result.txt', Buffer.from(JSON.stringify(parsedData, null, 2)));
+    // console.log('FILE UPDATED')
 
     return parsedData;
 }
