@@ -20,6 +20,7 @@ app.post('/' + 'upload', upload.single('file'), function(req, res) {
 
 app.listen(process.env.PORT || 5000, function() {
     console.log('Listening...')
+    parseTextToJSON(fs.readFileSync('sample.txt').toString())
 })
 
 function parseTextToJSON(text) {
@@ -35,7 +36,7 @@ function parseTextToJSON(text) {
                     "purchaseOrderDate": []
                 }
             },
-            "body": [],
+            "body": {},
             "summary": {}
         },
         lx = 0,
@@ -51,16 +52,14 @@ function parseTextToJSON(text) {
         } else if (['N1', 'N2', 'N3', 'N4'].indexOf(seg_id) != -1) {
             if (seg_id == 'N1') {
                 typeOf = seg[0]
-                parsed['header']['names'][typeOf] = {}
+                parsed['body'][typeOf] = {}
             }
-            parsed['header']['names'][typeOf][seg_id] = seg
+            if (!parsed['body'][typeOf][seg_id]) {
+                parsed['body'][typeOf][seg_id] = []
+            }
+            parsed['body'][typeOf][seg_id].push(seg)
         }
-        else if (['HL'].indexOf(seg_id) != -1) {
-            if (seg_id == 'HL' && !parsed['header']['names'][seg_id]) {
-                parsed['header']['names'][seg_id] = []
-            }
-            parsed['header']['names'][seg_id].push(seg)
-        } else if (seg_id == 'G62') {
+        else if (seg_id == 'G62') {
             if (parsed['header']['dates']['requestedShipDate'].length == 0)
                 parsed['header']['dates']['requestedShipDate'] = seg
             else
@@ -77,7 +76,7 @@ function parseTextToJSON(text) {
                             "purchaseOrderDate": []
                         }
                     },
-                    "body": [],
+                    "body": {},
                     "summary": {}
                 }
             }
@@ -91,15 +90,19 @@ function parseTextToJSON(text) {
                     if (parsed['body'][lx])
                         parsed['body'][lx][seg_id] = seg;
                     else
-                        parsed['body'].push({
-                            [seg_id]: seg
-                        });
+                        if (!parsed['body'][seg_id]) {
+                            parsed['body'][seg_id] = []
+                        }
+                        parsed['body'][seg_id].push(seg);
                 }
             }
         }
     });
 
-    // fs.writeFileSync('result.txt', Buffer.from(JSON.stringify(parsedData, null, 2)));
+    console.log(parsedData)
+
+    fs.writeFileSync('result.txt', Buffer.from(JSON.stringify(parsedData, null, 2)));
+    console.log('FILE UPDATED')
 
     return parsedData;
 }
