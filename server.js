@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // https://www.sslshopper.com/ssl-converter.html
 // https://8gwifi.org/PemParserFunctions.jsp
+// https://www.nsoftware.com/kb/articles/as2.rst
 
 // AS2 Id : MCKTEST
 // URL: http://as2.rxcrossroads.com:5080/as2
