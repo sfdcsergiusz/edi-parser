@@ -5,8 +5,46 @@ const fs = require('fs')
 const app = express()
 var upload = multer()
 
+var tripleDES = require('nod3des')
+
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
+
+// https://www.sslshopper.com/ssl-converter.html
+// https://8gwifi.org/PemParserFunctions.jsp
+
+// AS2 Id : MCKTEST
+// URL: http://as2.rxcrossroads.com:5080/as2
+// Protocol : HTTP
+// Encryption algorithm: Triple DES
+// MDN Mode:  synchronous
+// IP Address: 143.112.68.106
+
+// -----BEGIN CERTIFICATE-----
+// MIIDsTCCApkCCgKJaAqLTLPDNGswDQYJKoZIhvcNAQEFBQAwgZkxCzAJBgNVBAYT
+// AlVTMQswCQYDVQQIEwJLWTETMBEGA1UEBxMKTG91aXN2aWxsZTERMA8GA1UEChMI
+// TWNrZXNzb24xETAPBgNVBAsTCE1ja2Vzc29uMS8wLQYJKoZIhvcNAQkBFiByYW1l
+// c2gucmFtYWRvc3NAcnhjcm9zc3JvYWRzLmNvbTERMA8GA1UEAxMITUNLRVNTT04w
+// HhcNMTgwNjExMjMzODIwWhcNMjQwNjExMjMzODIwWjCBmTELMAkGA1UEBhMCVVMx
+// CzAJBgNVBAgTAktZMRMwEQYDVQQHEwpMb3Vpc3ZpbGxlMREwDwYDVQQKEwhNY2tl
+// c3NvbjERMA8GA1UECxMITWNrZXNzb24xLzAtBgkqhkiG9w0BCQEWIHJhbWVzaC5y
+// YW1hZG9zc0ByeGNyb3Nzcm9hZHMuY29tMREwDwYDVQQDEwhNQ0tFU1NPTjCCASIw
+// DQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOTN2qAwJucFAflJsp8fzVDmN+lN
+// NwXNIRRHFiKcAIJv/9OBxVdHEhgFCEcVncXXtaleOP9n8zPZ8CSztl7QehIbg3NE
+// Ig3SUy8eoHbiu+ePoEgT5MbCh4NUW5etH6y/7NG/BCE2iuJxmM6mXY/lFIP/cVZA
+// zwt13OvVeYyc9Y9wRsdaMRU4zNRZVGHHuixKHCCWku9VCL1n1GcH1uo086CGOhGZ
+// Mz+N1Oo+K8Hm9/87l/Li7q1CWvuiRMamhHToLJzEVUqoIRBlhCyPgRG5JZu6QdiD
+// h/ZFyG5v/vUw5phX+aXZsz2Y8RAWy/Vm7T7WG5dgYmjgbhwWMdxkdIEAiu0CAwEA
+// ATANBgkqhkiG9w0BAQUFAAOCAQEAkYIj0D7SJU7ZnZ9huyJdzwv60w+fcEkq6WwT
+// caGlza8E+YhdoX7jVUWZMhzZUGHIo6oPHNmDTFTnt25UO7nHyAfi0EHdUft9HlTP
+// XNZKcLKbCUj8xqqEOKxDQzKpRfnYGcwARTqPLBwBbxycPCcigqlWxc/vLbjJgVO5
+// 5W0htEowaXh8HR0/pmHqYas+x51XRKGEH0imPQgR2yiFXHXHLaQO5DKh26B0ziBj
+// wrWVG8aFYtEaK8fIo1sfVy+DgViGKz8hSrVNAp4w73VsTCiV5tXRIMRs9IRgEMhf
+// /T8Dcg2rhN5erVnjAcA7Wxzj7/KBh1OD8D19EqbiHjJ1k3btmw==
+// -----END CERTIFICATE-----
+
+const key = 'test'
+
 
 app.get('/', function(req, res) {
 
@@ -20,7 +58,9 @@ app.post('/' + 'upload', upload.single('file'), function(req, res) {
 
 app.listen(process.env.PORT || 5000, function() {
     console.log('Listening...')
-    // parseTextToJSON(fs.readFileSync('sample.txt').toString())
+    console.log(tripleDES.encrypt(key, 'payload'))
+
+    // fs.writeFileSync('result.txt', Buffer.from(publicKey).toString('utf-8'))
 })
 
 function parseTextToJSON(text) {
