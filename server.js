@@ -1,5 +1,4 @@
 const express = require('express')
-const https = require('https')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const fs = require('fs')
@@ -57,6 +56,21 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const key = 'test'
 
+// var options = {
+//     key: fs.readFileSync( './edi-p.key' ),
+//     cert: fs.readFileSync( './edi-p.crt' ),
+//     requestCert: false,
+//     rejectUnauthorized: false
+// }
+// var server = https.createServer(options, app)
+
+// server.listen(process.env.PORT || 5000, function() {
+//     console.log('Listening...')
+//     console.log(tripleDES.encrypt(key, 'payload'))
+
+//     // fs.writeFileSync('result.txt', Buffer.from(publicKey).toString('utf-8'))
+// })
+
 app.get('/', function(req, res) {
 
 })
@@ -67,15 +81,7 @@ app.post('/' + 'upload', upload.single('file'), function(req, res) {
     )
 })
 
-var options = {
-    key: fs.readFileSync( './edi-p.key' ),
-    cert: fs.readFileSync( './edi-p.crt' ),
-    requestCert: false,
-    rejectUnauthorized: false
-}
-var server = https.createServer(options, app)
-
-server.listen(process.env.PORT || 5000, function() {
+app.listen(process.env.PORT || 5000, function() {
     console.log('Listening...')
     console.log(tripleDES.encrypt(key, 'payload'))
 
