@@ -1,4 +1,5 @@
 const express = require('express')
+const https = require('https')
 const bodyParser = require('body-parser')
 const multer = require('multer')
 const fs = require('fs')
@@ -13,6 +14,16 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // https://www.sslshopper.com/ssl-converter.html
 // https://8gwifi.org/PemParserFunctions.jsp
 // https://www.nsoftware.com/kb/articles/as2.rst
+// https://www.certlogik.com/decoder/
+
+// https://www.kevinleary.net/self-signed-trusted-certificates-node-js-express-js/
+
+// https://www.sslshopper.com/certificate-decoder.html
+// https://dzone.com/articles/getting-started-with-as2-protocol-using-as2gateway
+// https://www.goanywhere.com/managed-file-transfer/more/tutorials/how-to-send-as2-messages
+// https://www.ld.com/as2-part-3-certificates/
+// https://docs.oracle.com/cd/E57990_01/pt853pbh2/eng/pt/tiba/task_WorkingWiththeAS2Connectors-fe7ed2.html#topofpage
+
 
 // AS2 Id : MCKTEST
 // URL: http://as2.rxcrossroads.com:5080/as2
@@ -46,7 +57,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 const key = 'test'
 
-
 app.get('/', function(req, res) {
 
 })
@@ -57,7 +67,15 @@ app.post('/' + 'upload', upload.single('file'), function(req, res) {
     )
 })
 
-app.listen(process.env.PORT || 5000, function() {
+var options = {
+    key: fs.readFileSync( './edi-p.key' ),
+    cert: fs.readFileSync( './edi-p.crt' ),
+    requestCert: false,
+    rejectUnauthorized: false
+}
+var server = https.createServer(options, app)
+
+server.listen(process.env.PORT || 5000, function() {
     console.log('Listening...')
     console.log(tripleDES.encrypt(key, 'payload'))
 
@@ -67,7 +85,7 @@ app.listen(process.env.PORT || 5000, function() {
 function parseTextToJSON(text) {
     let data = text.split('\n'),
 
-        parsedData = []
+    parsedData = []
 
     parsed = {
             "header": {
